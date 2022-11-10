@@ -257,7 +257,7 @@ class Application(Funcs, Relatorios, Validadores):
     def tela(self):
         self.janela.title("CONSULTA E CADASTRO DE FERRAMENTAS")
         self.janela.geometry("1060x483")
-        self.janela.iconbitmap("img/ferra.ico")
+        self.janela.iconbitmap("ferra.ico")
         self.janela.configure(background="#e9edf5")
         self.janela.resizable(width=False, height=False)
     def frames_da_tela(self):
