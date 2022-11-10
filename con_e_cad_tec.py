@@ -239,7 +239,7 @@ class Application(Funcs, Relatorios, Validadores):
     def tela(self):
         self.janela.title("CONSULTA E CADASTRO DE TÉCNICOS")
         self.janela.geometry("940x480")
-        self.janela.iconbitmap("img/tec.ico")
+        self.janela.iconbitmap("tec.ico")
         self.janela.configure(background="#e9edf5")
         self.janela.resizable(width=False, height=False)
     def frames_da_tela(self):
