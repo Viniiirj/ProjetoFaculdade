@@ -131,7 +131,7 @@ class Funcs:
         elif self.cpf == '':
             messagebox.showerror('Erro', "O campo CPF não pode ser vazio")
         elif self.telefone == '':
-            messagebox.showerror('Erro', "O campo TAMANHO não pode ser vazio")
+            messagebox.showerror('Erro', "O campo TELEFONE não pode ser vazio")
         elif self.equipe == '':
             messagebox.showerror('Erro', "O campo NOME DA EQUIPE não pode ser vazio")
         elif self.turno == '':
@@ -207,9 +207,32 @@ class Funcs:
 
         self.e_nome.insert(END, '%')
         nome = self.e_nome.get()
+        self.e_cpf.insert(END, '%')
+        cpf = self.e_cpf.get()
+        self.e_turno.insert(END, '%')
+        turno = self.e_turno.get()
+        self.e_equipe.insert(END, '%')
+        equipe = self.e_equipe.get()
+
         self.cursor.execute(
-            """SELECT cod, tec_nome, cpf, tel, nome_equipe, turno FROM tecnicos
-            WHERE tec_nome LIKE '%s' ORDER BY tec_nome ASC""" % nome)
+            f"""SELECT cod, tec_nome, cpf, tel, nome_equipe, turno FROM tecnicos
+            WHERE tec_nome LIKE '%{nome}%' AND cpf LIKE '%{cpf}%' AND nome_equipe LIKE '%{equipe}%' AND turno LIKE '%{turno}%' 
+            ORDER BY tec_nome ASC""")
+        Cod = len(self.codigo_entry.get())
+        Nome = len(self.e_nome.get())
+        CPF = len(self.e_cpf.get())
+        Tel = len(self.e_telefone.get())
+        Equipe = len(self.e_equipe.get())
+        Turno = len(self.e_turno.get())
+
+        self.codigo_entry.delete(Cod-1, END)
+        self.e_nome.delete(Nome-1, END)
+        self.e_cpf.delete(CPF-1, END)
+        self.e_telefone.delete(Tel-1, END)
+        self.e_equipe.delete(Equipe-1, END)
+        self.e_turno.delete(Turno-1, END)
+
+
 
         buscanomeTec = self.cursor.fetchall()
         for i in buscanomeTec:
@@ -239,7 +262,7 @@ class Application(Funcs, Relatorios, Validadores):
     def tela(self):
         self.janela.title("CONSULTA E CADASTRO DE TÉCNICOS")
         self.janela.geometry("940x480")
-        self.janela.iconbitmap("tec.ico")
+        self.janela.iconbitmap("img/tec.ico")
         self.janela.configure(background="#e9edf5")
         self.janela.resizable(width=False, height=False)
     def frames_da_tela(self):
@@ -301,9 +324,9 @@ class Application(Funcs, Relatorios, Validadores):
         self.b_limpar.place(x=15,y=360)
 
         # Botão BuscarNome
-        self.b_buscar = Button(self.frame_baixo, command=self.busca_tecnico, text="Buscar \ Nome", width=12, font="Ivi 10 bold",
+        self.b_buscar = Button(self.frame_baixo, command=self.busca_tecnico, text="Buscar", width=10, font="Ivi 10 bold",
                                bg="#4fa882", fg="#feffff", relief='raised', overrelief='ridge')
-        self.b_buscar.place(x=111, y=360)
+        self.b_buscar.place(x=110, y=360)
 
         # Botão inserir
         self.b_inserir = Button(self.frame_baixo,command=self.add_tec, text="Inserir", width=10,font="Ivi 10 bold", bg="#038cfc", fg="#feffff",relief='raised', overrelief='ridge')

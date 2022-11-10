@@ -190,7 +190,7 @@ class Funcs:
     def altera_fer(self):
         self.variavel()
         self.conecta_bd()
-        lista = [self.part_number, self.fabricante, self.tamanho, self.medida, self.volts, self.tipo,
+        lista = [self.codigo, self.part_number, self.fabricante, self.tamanho, self.medida, self.volts, self.tipo,
                       self.material, self.descricao]
         if self.part_number == '':
             messagebox.showerror('Erro', "O campo PART NUMBER não pode ser vazio")
@@ -214,8 +214,8 @@ class Funcs:
     def update(self,lista):
         self.variavel()
         self.conecta_bd()
-        self.cursor.execute("""UPDATE ferramentas SET part_number=?, fabricante=?, tamanho=?, medida=?, volts=?, tipo=?, material=?, descricao=? WHERE cod=?
-        WHERE cod = ?""", lista)
+        self.cursor.execute("""UPDATE ferramentas SET part_number=?, fabricante=?, tamanho=?, medida=?, volts=?, tipo=?, material=?, descricao=? WHERE cod=?""", (self.part_number, self.fabricante, self.tamanho, self.medida, self.volts, self.tipo,
+                      self.material, self.descricao,self.codigo))
         self.conn.commit()
         self.desconecta_bd()
         self.select_lista()
@@ -226,9 +226,65 @@ class Funcs:
 
         self.e_fabricante.insert(END, '%')
         fabricante = self.e_fabricante.get()
+        self.e_descricao.insert(END, '%')
+        descricao = self.e_descricao.get()
+        self.e_tipo.insert(END, '%')
+        tipo = self.e_tipo.get()
+
+        self.codigo_entry.insert(END, '%')
+        codigo = self.codigo_entry.get()
+
+        self.e_part_number.insert(END, '%')
+        part_number = self.e_part_number.get()
+
+        self.e_fabricante.insert(END, '%')
+        fabricante = self.e_fabricante.get()
+
+        self.e_tamanho.insert(END, '%')
+        tamanho = self.e_tamanho.get()
+
+        self.e_medida.insert(END, '%')
+        medida = self.e_medida.get()
+
+        self.e_volts.insert(END, '%')
+        volts = self.e_volts.get()
+
+        self.e_tipo.insert(END, '%')
+        tipo = self.e_tipo.get()
+
+        self.e_material.insert(END, '%')
+        material = self.e_material.get()
+
+        self.e_descricao.insert(END, '%')
+        descricao = self.e_descricao.get()
+
+
         self.cursor.execute(
-            """SELECT cod, part_number, fabricante, tamanho, medida, volts, tipo, material, descricao FROM ferramentas
-            WHERE fabricante LIKE '%s' ORDER BY fabricante ASC""" % fabricante)
+            f"""SELECT cod, part_number, fabricante, tamanho, medida, volts, tipo, material, descricao FROM ferramentas
+            WHERE cod LIKE '%{codigo}%' AND part_number LIKE '%{part_number}%'
+             AND fabricante LIKE '%{fabricante}%' AND tamanho LIKE '%{tamanho}%' AND  medida LIKE '%{medida}%' AND
+             volts LIKE '%{volts}%' AND material LIKE '%{material}%' AND
+             descricao LIKE '%{descricao}%' 
+             AND tipo LIKE '%{tipo}%' ORDER BY fabricante ASC""")
+        Cod = len(self.codigo_entry.get())
+        Par = len(self.e_part_number.get())
+        Fab = len(self.e_fabricante.get())
+        Tam = len(self.e_tamanho.get())
+        Med = len(self.e_medida.get())
+        Vol = len(self.e_volts.get())
+        Tip = len(self.e_tipo.get())
+        Mat = len(self.e_material.get())
+        Des = len(self.e_descricao.get())
+
+        self.codigo_entry.delete(Cod, END)
+        self.e_part_number.delete(Par-1, END)
+        self.e_fabricante.delete(Fab-2, END)
+        self.e_tamanho.delete(Tam, END)
+        self.e_medida.delete(Med-1, END)
+        self.e_volts.delete(Vol-1, END)
+        self.e_tipo.delete(Tip-2, END)
+        self.e_material.delete(Mat-1, END)
+        self.e_descricao.delete(Des-2, END)
 
         busca_part_number = self.cursor.fetchall()
         for i in busca_part_number:
@@ -257,7 +313,7 @@ class Application(Funcs, Relatorios, Validadores):
     def tela(self):
         self.janela.title("CONSULTA E CADASTRO DE FERRAMENTAS")
         self.janela.geometry("1060x483")
-        self.janela.iconbitmap("ferra.ico")
+        self.janela.iconbitmap("img/ferra.ico")
         self.janela.configure(background="#e9edf5")
         self.janela.resizable(width=False, height=False)
     def frames_da_tela(self):
@@ -302,7 +358,7 @@ class Application(Funcs, Relatorios, Validadores):
                          relief='flat')
         self.l_medida.place(x=100, y=60)
         self.lista_medida = ["Centimetro", "Milimetro", "Polegada"]
-        self.e_medida = Combobox(self.frame_baixo, width=10, values=self.lista_medida,  validate="key", validatecommand=self.vctx)
+        self.e_medida = Combobox(self.frame_baixo, width=10, values=self.lista_medida)
         self.e_medida.place(x=105, y=85)
 
         # volts
@@ -359,10 +415,10 @@ class Application(Funcs, Relatorios, Validadores):
         self.b_limpar = Button(self.frame_baixo, command=self.limpa_tela, text="Limpar", width=10,font="Ivi 10 bold", bg="#038cfc", fg="#feffff",relief='raised', overrelief='ridge')
         self.b_limpar.place(x=15,y=360)
 
-        # Botão BuscarFabricante
-        self.b_buscar = Button(self.frame_baixo, command=self.busca_fer, text="Buscar \ Fabric.", width=12, font="Ivi 10 bold",
+        # Botão Buscar
+        self.b_buscar = Button(self.frame_baixo, command=self.busca_fer, text="Buscar", width=10, font="Ivi 10 bold",
                                bg="#4fa882", fg="#feffff", relief='raised', overrelief='ridge')
-        self.b_buscar.place(x=111, y=360)
+        self.b_buscar.place(x=110, y=360)
 
     def lista_frame(self):
 
