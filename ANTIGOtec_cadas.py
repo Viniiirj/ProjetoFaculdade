@@ -60,7 +60,7 @@ class Funcs:
         self.e_equipe.delete(0, END)
         self.e_turno.delete(0, END)
     def conecta_bd(self):
-        self.conn = sqlite3.connect("cadastroTec.bd")
+        self.conn = sqlite3.connect("ANTIGO.bd")
         self.cursor = self.conn.cursor()
     def desconecta_bd(self):
         self.conn.close()
